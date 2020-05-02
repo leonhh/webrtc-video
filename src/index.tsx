@@ -4,14 +4,17 @@ import './assets/main.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { SocketProvider } from './providers/SocketProvider';
+import { AppStateProvider } from './providers/StateProvider';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <SocketProvider>
-      <App />
-    </SocketProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <SocketProvider>
+            <AppStateProvider>
+                <App />
+            </AppStateProvider>
+        </SocketProvider>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change
