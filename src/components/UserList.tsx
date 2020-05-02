@@ -14,9 +14,6 @@ const UserList: React.FunctionComponent<{}> = () => {
     const [users, setUsers] = useState<Array<User>>([
         { userId: 'test', socketId: 'test' },
         { userId: 'test henk', socketId: 'test' },
-        { userId: 'jan de vries', socketId: 'test' },
-        { userId: 'leon horlings', socketId: 'test' },
-        { userId: 'test', socketId: 'test' },
     ]);
 
     useEffect(() => {
