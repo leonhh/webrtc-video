@@ -7,7 +7,6 @@ import { call } from '../providers/state/actions';
 import { User } from '../interfaces/user';
 
 const UserList: React.FunctionComponent<{}> = () => {
-    const socket = useSocket();
     const [state, dispatch] = useAppState();
 
     const [users, setUsers] = useState<Array<User>>([

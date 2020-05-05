@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, ReducerState, Dispatch, ReducerAction } from 'react';
+import React, { createContext, useContext, useReducer, Dispatch, ReducerAction } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { IAppState } from './state/interface';
 import reducer from './state/reducer';
