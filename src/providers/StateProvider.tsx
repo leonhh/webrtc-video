@@ -1,4 +1,4 @@
-import React, { useState, createContext, useLayoutEffect, useEffect, useContext, useReducer } from 'react';
+import React, { createContext, useContext, useReducer, ReducerState, Dispatch, ReducerAction } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { IAppState } from './state/interface';
 import reducer from './state/reducer';
@@ -8,13 +8,14 @@ const StateContext = createContext(null);
 const AppStateProvider = (props: any) => {
     const initialState: IAppState = {
         sessionId: uuidv4(),
+        activeCall: undefined,
         name: '',
     };
 
     return <StateContext.Provider value={useReducer(reducer, initialState)} {...props} />;
 };
 
-function useAppState(): SocketIOClient.Socket {
+function useAppState(): [IAppState, Dispatch<ReducerAction<any>>] {
     const context = useContext(StateContext);
 
     if (context === undefined || context === null) {

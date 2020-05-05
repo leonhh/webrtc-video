@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSocket } from '../providers/SocketProvider';
 import { useAppState } from '../providers/StateProvider';
+import { setName } from '../providers/state/actions';
 
 const UsernameInput: React.FunctionComponent<{}> = () => {
     const socket = useSocket();
@@ -19,7 +20,7 @@ const UsernameInput: React.FunctionComponent<{}> = () => {
                 type="text"
                 placeholder="Naam"
                 value={state.name}
-                onChange={e => dispatch({ type: 'SET_NAME', name: e.target.value })}
+                onChange={e => dispatch(setName(e.target.value))}
             />
 
             <button className="bg-blue-400 rounded text-white px-4 py-2" type="button" onClick={() => join()}>

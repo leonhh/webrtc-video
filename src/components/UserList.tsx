@@ -2,29 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useSocket } from '../providers/SocketProvider';
 import { ReactComponent as Empty } from './../assets/empty.svg';
 import { ReactComponent as Call } from './../assets/call.svg';
-
-interface User {
-    socketId: string;
-    userId: string;
-}
+import { useAppState } from '../providers/StateProvider';
+import { call } from '../providers/state/actions';
+import { User } from '../interfaces/user';
 
 const UserList: React.FunctionComponent<{}> = () => {
     const socket = useSocket();
+    const [state, dispatch] = useAppState();
 
     const [users, setUsers] = useState<Array<User>>([
         { userId: 'test', socketId: 'test' },
         { userId: 'test henk', socketId: 'test' },
     ]);
-
-    useEffect(() => {
-        // fetch('http://localhost:5000/users').then(async (res) => {
-        //     const data = await res.json();
-        //     setUsers(data);
-        // });
-        // socket.on('user_connected', (user: User) => {
-        //     setUsers([ ...users, user ]);
-        // });
-    }, []);
 
     return (
         <div>
@@ -39,7 +28,7 @@ const UserList: React.FunctionComponent<{}> = () => {
                     >
                         {user.userId}
 
-                        <Call className="w-5 h-5 cursor-pointer" onClick={() => alert('bellen')} />
+                        <Call className="w-5 h-5 cursor-pointer" onClick={() => dispatch(call(user, user))} />
                     </div>
                 ))
             ) : (
