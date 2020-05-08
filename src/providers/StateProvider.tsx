@@ -10,6 +10,7 @@ const AppStateProvider = (props: any) => {
         sessionId: uuidv4(),
         activeCall: undefined,
         name: '',
+        nameIsSaved: false,
     };
 
     return <StateContext.Provider value={useReducer(reducer, initialState)} {...props} />;

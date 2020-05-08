@@ -1,4 +1,5 @@
 export interface User {
     socketId: string;
-    userId: string;
+    name: string;
+    sessionId: string;
 }

@@ -16,6 +16,19 @@ export const reducer = (state: IAppState, action: Action): IAppState => {
                     recipient: action.payload.recipient,
                 },
             };
+
+        case 'HANGUP':
+            return {
+                ...state,
+                activeCall: undefined,
+            };
+
+        case 'SET_NAME_IS_SAVED':
+            return {
+                ...state,
+                nameIsSaved: action.payload.isSaved,
+            };
+
         default:
             throw new Error(`Action type not found`);
     }

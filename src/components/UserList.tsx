@@ -7,12 +7,17 @@ import { call } from '../providers/state/actions';
 import { User } from '../interfaces/user';
 
 const UserList: React.FunctionComponent<{}> = () => {
+    const socket = useSocket();
     const [state, dispatch] = useAppState();
+    const [users, setUsers] = useState<Array<User>>([]);
 
-    const [users, setUsers] = useState<Array<User>>([
-        { userId: 'test', socketId: 'test' },
-        { userId: 'test henk', socketId: 'test' },
-    ]);
+    useEffect(() => {
+        fetch('http://localhost:5000/users').then(async res => {
+            setUsers(await res.json());
+        });
+
+        socket.on('users-list-update', (data: Array<User>) => setUsers(data));
+    }, []);
 
     return (
         <div>
@@ -25,14 +30,14 @@ const UserList: React.FunctionComponent<{}> = () => {
                         }
                         key={i}
                     >
-                        {user.userId}
+                        {user.name}
 
                         <Call className="w-5 h-5 cursor-pointer" onClick={() => dispatch(call(user, user))} />
                     </div>
                 ))
             ) : (
                 <div className="text-center">
-                    <span className="font-bold text-xl">Geen mensen</span>
+                    <span className="font-bold text-xl">Oh no, no one&apos;s here</span>
 
                     <Empty className="w-full h-auto p-10" />
                 </div>

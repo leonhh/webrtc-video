@@ -9,12 +9,20 @@ export interface IAppState {
           }
         | undefined;
     name: string;
+    nameIsSaved: boolean;
 }
 
 interface SetNameAction {
     type: 'SET_NAME';
     payload: {
         name: string;
+    };
+}
+
+interface SetNameIsSavedAction {
+    type: 'SET_NAME_IS_SAVED';
+    payload: {
+        isSaved: boolean;
     };
 }
 
@@ -26,4 +34,8 @@ interface CallAction {
     };
 }
 
-export type Action = SetNameAction | CallAction;
+interface HangupAction {
+    type: 'HANGUP';
+}
+
+export type Action = SetNameAction | SetNameIsSavedAction | CallAction | HangupAction;

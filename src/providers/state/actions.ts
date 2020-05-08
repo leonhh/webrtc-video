@@ -8,10 +8,21 @@ export const setName = (name: string): Action => ({
     },
 });
 
+export const setNameIsSaved = (isSaved: boolean): Action => ({
+    type: 'SET_NAME_IS_SAVED',
+    payload: {
+        isSaved,
+    },
+});
+
 export const call = (caller: User, recipient: User): Action => ({
     type: 'CALL',
     payload: {
         caller,
         recipient,
     },
+});
+
+export const hangup = (): Action => ({
+    type: 'HANGUP',
 });
