@@ -1,10 +1,20 @@
 import React, { createContext, useContext } from 'react';
 import io from 'socket.io-client';
+import { useAppState } from './StateProvider';
+import { setSocket } from './state/actions';
 
 const SocketContext = createContext(null);
 
+const socket = io.connect('http://localhost:5000');
+
 const SocketProvider = (props: any) => {
-    return <SocketContext.Provider value={io.connect('http://localhost:5000')} {...props} />;
+    const [, dispatch] = useAppState();
+
+    socket.on('connect', () => {
+        dispatch(setSocket(socket.id));
+    });
+
+    return <SocketContext.Provider value={socket} {...props} />;
 };
 
 function useSocket(): SocketIOClient.Socket {

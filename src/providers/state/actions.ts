@@ -8,6 +8,13 @@ export const setName = (name: string): Action => ({
     },
 });
 
+export const setSocket = (socket: string): Action => ({
+    type: 'SET_SOCKET',
+    payload: {
+        socket,
+    },
+});
+
 export const setNameIsSaved = (isSaved: boolean): Action => ({
     type: 'SET_NAME_IS_SAVED',
     payload: {

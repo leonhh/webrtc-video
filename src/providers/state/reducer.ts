@@ -8,6 +8,12 @@ export const reducer = (state: IAppState, action: Action): IAppState => {
                 name: action.payload.name,
             };
 
+        case 'SET_SOCKET':
+            return {
+                ...state,
+                socket: action.payload.socket,
+            };
+
         case 'CALL':
             return {
                 ...state,

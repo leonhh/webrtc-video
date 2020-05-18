@@ -12,12 +12,14 @@ const UserList: React.FunctionComponent<{}> = () => {
     const [users, setUsers] = useState<Array<User>>([]);
 
     useEffect(() => {
-        fetch('http://localhost:5000/users').then(async res => {
+        fetch('http://localhost:5000/users').then(async (res) => {
             setUsers(await res.json());
         });
 
-        socket.on('users-list-update', (data: Array<User>) => setUsers(data));
-    }, []);
+        socket.on('users-list-update', (data: Array<User>) =>
+            setUsers(data.filter(user => user.sessionId !== state.sessionId))
+        );
+    }, [socket, state.sessionId]);
 
     return (
         <div>
@@ -32,7 +34,14 @@ const UserList: React.FunctionComponent<{}> = () => {
                     >
                         {user.name}
 
-                        <Call className="w-5 h-5 cursor-pointer" onClick={() => dispatch(call(user, user))} />
+                        <Call
+                            className="w-5 h-5 cursor-pointer"
+                            onClick={() =>
+                                dispatch(
+                                    call({ sessionId: state.sessionId, name: state.name, socket: state.socket }, user)
+                                )
+                            }
+                        />
                     </div>
                 ))
             ) : (

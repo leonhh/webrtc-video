@@ -8,11 +8,11 @@ import { AppStateProvider } from './providers/StateProvider';
 
 ReactDOM.render(
     <React.StrictMode>
-        <SocketProvider>
-            <AppStateProvider>
+        <AppStateProvider>
+            <SocketProvider>
                 <App />
-            </AppStateProvider>
-        </SocketProvider>
+            </SocketProvider>
+        </AppStateProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );

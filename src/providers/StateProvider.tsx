@@ -7,6 +7,7 @@ const StateContext = createContext(null);
 
 const AppStateProvider = (props: any) => {
     const initialState: IAppState = {
+        socket: '',
         sessionId: uuidv4(),
         activeCall: undefined,
         name: '',

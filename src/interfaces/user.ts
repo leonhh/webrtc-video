@@ -1,5 +1,5 @@
 export interface User {
-    socketId: string;
+    socket: string;
     name: string;
     sessionId: string;
 }
