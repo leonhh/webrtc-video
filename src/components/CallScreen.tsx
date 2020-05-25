@@ -15,11 +15,27 @@ const CallScreen: React.FunctionComponent<{}> = () => {
 
     const [state, dispatch] = useAppState();
 
-    useWebRTC(localVideoRef, remoteVideoRef);
+    const [localStream, remoteStream] = useWebRTC();
 
     useEffect(() => {
         setClasses(classes + ' bg-gray-800');
     }, []);
+
+    useEffect(() => {
+        console.log(remoteStream);
+
+        if (remoteVideoRef.current && remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+        }
+    }, [remoteStream]);
+
+    useEffect(() => {
+        console.log(localStream);
+
+        if (localVideoRef.current && localStream) {
+            localVideoRef.current.srcObject = localStream;
+        }
+    }, [localStream]);
 
     return (
         <div className={classes}>

@@ -5,6 +5,7 @@ import { ReactComponent as Call } from './../assets/call.svg';
 import { useAppState } from '../providers/StateProvider';
 import { call } from '../providers/state/actions';
 import { User } from '../interfaces/user';
+import classnames from 'classnames';
 
 const UserList: React.FunctionComponent<{}> = () => {
     const socket = useSocket();
@@ -35,7 +36,10 @@ const UserList: React.FunctionComponent<{}> = () => {
                         {user.name}
 
                         <Call
-                            className="w-5 h-5 cursor-pointer"
+                            className={classnames(
+                                'w-5 h-5',
+                                state.nameIsSaved ? 'cursor-pointer' : 'opacity-50 pointer-events-none'
+                            )}
                             onClick={() =>
                                 dispatch(
                                     call({ sessionId: state.sessionId, name: state.name, socket: state.socket }, user)

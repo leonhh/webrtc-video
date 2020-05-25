@@ -12,10 +12,7 @@ const config = {
 
 const peerConnection = new RTCPeerConnection(config);
 
-export const useWebRTC = (
-    localVideoRef: React.RefObject<HTMLVideoElement>,
-    remoteVideoRef: React.RefObject<HTMLVideoElement>
-) => {
+export const useWebRTC = () => {
     const socket = useSocket();
     const [state, dispatch] = useAppState();
 
@@ -23,12 +20,12 @@ export const useWebRTC = (
     const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
 
     const createOffer = async () => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(function (stream) {
-            // Add streams to peerConnection
-            for (const track of stream.getTracks()) {
-                peerConnection.addTrack(track, stream);
-            }
-        });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+        // Add streams to peerConnection
+        for (const track of stream.getTracks()) {
+            peerConnection.addTrack(track, stream);
+        }
 
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
@@ -38,26 +35,43 @@ export const useWebRTC = (
             caller: state.activeCall?.caller,
             recipient: state.activeCall?.recipient,
         });
+
+        console.log('created offer');
     };
 
     const receiveOfferAndCreateAnswer = async (data: any) => {
-        await peerConnection.setRemoteDescription(data.offer);
+        console.log('incoming offer:', data.offer);
+
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+        // Add streams to peerConnection
+        for (const track of stream.getTracks()) {
+            peerConnection.addTrack(track, stream);
+        }
+
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
 
         const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
+        await peerConnection.setLocalDescription(new RTCSessionDescription(answer));
 
         socket.emit('answer', {
             answer,
             caller: state.activeCall?.caller,
             recipient: state.activeCall?.recipient,
         });
+
+        console.log('recevied offer and created answer');
     };
 
-    const recieveAnswer = async (data: any) => {
-        await peerConnection.setRemoteDescription(data.answer);
+    const receiveAnswer = async (data: any) => {
+        console.log('incoming answer:', data.answer);
+
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
     };
 
     const receiveIcecandidate = async (data: any) => {
+        console.log('recevied icecandidate', data);
+
         await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
     };
 
@@ -66,7 +80,10 @@ export const useWebRTC = (
             return;
         }
 
+        console.log(event.candidate);
+
         socket.emit('icecandidate', {
+            candidate: event.candidate,
             caller: state.activeCall?.caller,
             recipient: state.activeCall?.recipient,
         });
@@ -74,6 +91,7 @@ export const useWebRTC = (
 
     const initWebRTC = async () => {
         peerConnection.addEventListener('track', (event: RTCTrackEvent) => {
+            console.log('received remote stream');
             // set received stream
             setRemoteStream(event.streams[0]);
         });
@@ -90,7 +108,7 @@ export const useWebRTC = (
         }
 
         socket.on('offer', receiveOfferAndCreateAnswer);
-        socket.on('aswer', recieveAnswer);
+        socket.on('answer', receiveAnswer);
         socket.on('icecandidate', receiveIcecandidate);
     };
 
@@ -98,20 +116,10 @@ export const useWebRTC = (
         initWebRTC();
 
         return () => {
-            remoteStream?.getTracks().forEach(track => track.stop());
-            localStream?.getTracks().forEach(track => track.stop());
+            remoteStream?.getTracks().forEach((track) => track.stop());
+            localStream?.getTracks().forEach((track) => track.stop());
         };
     }, []);
 
-    useEffect(() => {
-        if (remoteVideoRef.current && remoteStream) {
-            remoteVideoRef.current.srcObject = remoteStream;
-        }
-    }, [remoteStream]);
-
-    useEffect(() => {
-        if (localVideoRef.current && localStream) {
-            localVideoRef.current.srcObject = localStream;
-        }
-    }, [localStream]);
+    return [localStream, remoteStream];
 };
